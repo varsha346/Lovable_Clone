@@ -13,4 +13,7 @@ public interface ProjectService {
      List<ProjectSummaryResponse> getUserProjectById(long id, long userId);
 
      ProjectResponse createProject(ProjectRequest request, long userId);
+     ProjectResponse updateProject(long id, ProjectRequest request, long userId);
+
+    void softDelete(long id, long userId);
 }

@@ -12,7 +12,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Project_Member {
+public class ProjectMember {
 ProjectMemberId id;
 Project project;
 User user;
