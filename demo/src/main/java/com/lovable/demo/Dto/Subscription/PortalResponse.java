@@ -1,4 +1,4 @@
 package com.lovable.demo.Dto.Subscription;
-
-public record PortalResponse() {
+public record PortalResponse(String portalUrl) {
 }
+

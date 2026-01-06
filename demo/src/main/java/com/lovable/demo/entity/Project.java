@@ -1,24 +1,38 @@
 package com.lovable.demo.entity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.Getter;
-import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 //used instead of func(this.x = x , this.y = y..)
+@Builder
+@Table(name = "projects")
+
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Project {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+    @Column(nullable = false)
     String name;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id",nullable = false)
     User user;
     Boolean isPublic = false;
+
+    @CreationTimestamp
     Instant createdAt;
+    @UpdateTimestamp
     Instant updatedAt;
+
     Instant deletedAt;
 
 

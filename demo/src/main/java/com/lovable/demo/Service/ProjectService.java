@@ -8,6 +8,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public interface ProjectService {
+
      List<ProjectSummaryResponse> getUserProjects(long userId);
 
      List<ProjectSummaryResponse> getUserProjectById(long id, long userId);

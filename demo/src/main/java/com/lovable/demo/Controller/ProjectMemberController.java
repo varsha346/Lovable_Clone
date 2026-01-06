@@ -1,15 +1,18 @@
 package com.lovable.demo.Controller;
 
+import com.lovable.demo.Dto.Member.InviteMemberRequest;
 import com.lovable.demo.Dto.Member.MemberResponse;
+import com.lovable.demo.Dto.Member.UpdateMemberRoleRequest;
 import com.lovable.demo.Dto.Project.ProjectRequest;
 import com.lovable.demo.Dto.Project.ProjectResponse;
 import com.lovable.demo.Dto.Project.ProjectSummaryResponse;
 import com.lovable.demo.Service.ProjectService;
+import com.lovable.demo.entity.ProjectMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.lovable.demo.Service.ProjectMemberService;
 import java.util.List;
 
 @RestController
@@ -21,7 +24,7 @@ public class ProjectMemberController {
     private final ProjectMemberService projectMemberService;
 
     @GetMapping
-    public ResponseEntity<List<ProjectMember>> getProjectMembers(@PathVariable Long projectId) {
+    public ResponseEntity<List<MemberResponse>> getProjectMembers(@PathVariable Long projectId) {
         Long userId = 1L;
         return ResponseEntity.ok(projectMemberService.getProjectMembers(projectId, userId));
     }
@@ -41,14 +44,14 @@ public class ProjectMemberController {
     public ResponseEntity<MemberResponse> updateMemberRole(
             @PathVariable Long projectId,
             @PathVariable Long memberId,
-            @RequestBody InviteMemberRequest request
+            @RequestBody UpdateMemberRoleRequest request
     ) {
         Long userId = 1L;
         return ResponseEntity.ok(projectMemberService.updateMemberRole(projectId, memberId, request, userId));
     }
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<MemberResponse> updateMemberRole(
+    public ResponseEntity<MemberResponse> deleteMember(
             @PathVariable Long projectId,
             @PathVariable Long memberId
     ) {
