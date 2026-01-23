@@ -1,10 +1,7 @@
 package com.lovable.demo.entity;
 import java.time.Instant;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "users")
 public class User {
@@ -22,8 +20,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
      Long id;
-     String email;
-     String passwordHash;
+     String username;
+     String password;
      String name;
      String avatarUrl;
 

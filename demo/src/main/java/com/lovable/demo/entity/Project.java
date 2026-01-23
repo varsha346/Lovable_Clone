@@ -9,32 +9,34 @@ import java.time.Instant;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-//used instead of func(this.x = x , this.y = y..)
 @Builder
-@Table(name = "projects")
-
-
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "projects",
+        indexes = {
+                @Index(name = "idx_projects_updated_at_desc", columnList = "updated_at DESC, deleted_at"),
+                @Index(name = "idx_projects_deleted_at_updated_at_desc", columnList = "deleted_at, updated_at DESC"),
+                @Index(name = "idx_project_deleted_at", columnList = "deleted_at")
+        }
+)
 public class Project {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
     @Column(nullable = false)
     String name;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id",nullable = false)
-    User user;
     Boolean isPublic = false;
 
     @CreationTimestamp
     Instant createdAt;
+
     @UpdateTimestamp
     Instant updatedAt;
 
-    Instant deletedAt;
-
-
-
+    Instant deletedAt; //soft delete
 }

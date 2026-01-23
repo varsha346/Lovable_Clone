@@ -26,11 +26,14 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 
 
     @Query("""
-            SELECT p from Project p
-            left join fetch p.owner
-            where p.id = :projectId
-            and p.deletedAt is null
-            and p.owner.id = :userId
+            SELECT p FROM Project p
+            WHERE p.id = :projectId
+            AND p.deletedAt IS NULL
+            AND EXISTS (
+            SELECT 1 FROM ProjectMember pm
+            WHERE pm.id.userId = :userId
+            AND pm.id.projectId = :projectId
+            )
             """)
          Optional<Project> findAccessibleProjectById(@Param("projectId") Long projectId,
                                                  @Param("userId") Long userId);

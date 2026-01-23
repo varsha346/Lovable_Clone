@@ -13,7 +13,7 @@ import java.util.List;
 public interface ProjectMapper {
 
     ProjectResponse toProjectResponse(Project project);
-    @Mapping(target = "projectName", source = "name")
+    @Mapping(target = "name", source = "name")
     ProjectSummaryResponse toProjectSummaryResponse(Project project);
 
     List<ProjectSummaryResponse> toListOfProjectSummaryResponse(List<Project> projects);
