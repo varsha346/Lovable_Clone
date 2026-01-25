@@ -18,4 +18,26 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 jwt:
-  secret-key: as123@var342
+  secret-key: this_is_a_very_long_and_secure_jwt_secret_key_256_bits_minimum
+
+razorpay:
+  razorpay.key_id: rzp_test_RNQFCAGXB2IAK9
+  razorpay.key_secret: TCMtYMcXjaiFJ8P4TzZ57Aca
+
+
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: WARN
+    org.springframework.boot.autoconfigure: WARN
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    com.lovable: DEBUG
+
+  file:
+    name: logs/application.log
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

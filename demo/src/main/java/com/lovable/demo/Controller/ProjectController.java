@@ -6,12 +6,13 @@ import com.lovable.demo.Dto.Project.ProjectSummaryResponse;
 import com.lovable.demo.Service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/projects")
@@ -35,7 +36,16 @@ public ResponseEntity<ProjectResponse>GetProjectsByID(@PathVariable long id){
 @PostMapping
 public ResponseEntity<ProjectResponse>createProject(@RequestBody @Valid ProjectRequest request ){
     long userId = 1L;
-    return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(request));
+    log.info("create order request initiated");
+
+    try {
+        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(request));
+    }
+    catch(Exception e ) {
+        log.error("error is ",e);
+    }
+    return ResponseEntity.noContent().build();
+
 }
 
 @PatchMapping("/{id}")

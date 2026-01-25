@@ -14,15 +14,18 @@ import com.lovable.demo.mapper.ProjectMapper;
 import com.lovable.demo.repository.ProjectMemberRepository;
 import com.lovable.demo.repository.ProjectRepository;
 import com.lovable.demo.repository.UserRepository;
+import jakarta.persistence.PreRemove;
+import jakarta.persistence.PreUpdate;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -36,33 +39,65 @@ public class ProjectServiceImpl implements ProjectService {
     ProjectMemberRepository projectMemberRepository;
    AuthUtil authUtil;
 
-    @Override
-    public ProjectResponse createProject(ProjectRequest request) {
-        Long userId = authUtil.getCurrentUserId();
-//     User owner = userRepository.findById(userId).orElseThrow();
-        //ProjectMember projectMember = ProjectMemberRepository.
-     Project project = Project.builder()
-             .name(request.name())
-             .isPublic(false)
-                      .build();
-;
-     project = projectRepository.save(project);
-        ProjectMemberId projectMemberId = new ProjectMemberId(project.getId(),userId);
-        ProjectMember projectMember = ProjectMember.builder()
-                .id(projectMemberId)
-                .projectRole(ProjectRole.OWNER)
+//    @Override
+//    public ProjectResponse createProject(ProjectRequest request) {
+//        Long userId = authUtil.getCurrentUserId();
+////     User owner = userRepository.findById(userId).orElseThrow();
+//        //ProjectMember projectMember = ProjectMemberRepository.
+//     Project project = Project.builder()
+//             .name(request.name())
+//             .isPublic(false)
+//                      .build();
+//;
+//     project = projectRepository.save(project);
+//        ProjectMemberId projectMemberId = new ProjectMemberId(project.getId(),userId);
+//        ProjectMember projectMember = ProjectMember.builder()
+//                .id(projectMemberId)
+//                .projectRole(ProjectRole.OWNER)
+//
+//                .acceptedAt(Instant.now())
+//                .invitedAt(Instant.now())
+//                .project(project)
+//                .build();
+//
+//        projectMemberRepository.save(projectMember);
+//
+//
+//    //  long userId = authUtil.getCurrentUserId();
+//        return projectMapper.toProjectResponse(project);
+//    }
+@Override
+public ProjectResponse createProject(ProjectRequest request) {
 
-                .acceptedAt(Instant.now())
-                .invitedAt(Instant.now())
-                .project(project)
-                .build();
+    Long userId = authUtil.getCurrentUserId();
 
-        projectMemberRepository.save(projectMember);
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
+    Project project = Project.builder()
+            .name(request.name())
+            .isPublic(false)
+            .build();
 
-    //  long userId = authUtil.getCurrentUserId();
-        return projectMapper.toProjectResponse(project);
-    }
+    project = projectRepository.save(project);
+
+    ProjectMemberId projectMemberId =
+            new ProjectMemberId(project.getId(), userId);
+
+    ProjectMember projectMember = ProjectMember.builder()
+            .id(projectMemberId)
+            .user(user)                 // ✅ REQUIRED
+            .project(project)
+            .projectRole(ProjectRole.OWNER)
+            .acceptedAt(Instant.now())
+            .invitedAt(Instant.now())
+            .build();
+
+    projectMemberRepository.save(projectMember);
+
+    return projectMapper.toProjectResponse(project);
+}
+
     @Override
     public List<ProjectSummaryResponse> getUserProjects() {
         Long userId = authUtil.getCurrentUserId();
@@ -80,15 +115,18 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
+    @PreUpdate
     public ProjectResponse updateProject(long id, ProjectRequest request) {
         Long userId = authUtil.getCurrentUserId();
         Project project = projectRepository.findAccessibleProjectById(id,userId).orElseThrow();
         project.setName(request.name());
         project = projectRepository.save(project);
         return projectMapper.toProjectResponse(project);
+
     }
 
     @Override
+    @PreRemove
     public void softDelete(long id) {
         Long userId = authUtil.getCurrentUserId();
       Project project = getAccessibleProjectById(id,userId);

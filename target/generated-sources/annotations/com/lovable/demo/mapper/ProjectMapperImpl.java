@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-01-23T14:52:09+0530",
+    date = "2026-01-25T11:15:57+0530",
     comments = "version: 1.6.0, compiler: javac, environment: Java 24.0.2 (Oracle Corporation)"
 )
 @Component
@@ -26,16 +26,14 @@ public class ProjectMapperImpl implements ProjectMapper {
 
         long id = 0L;
         String name = null;
-        Instant createdAt = null;
-        Instant updatedAt = null;
 
         if ( project.getId() != null ) {
             id = project.getId();
         }
         name = project.getName();
-        createdAt = project.getCreatedAt();
-        updatedAt = project.getUpdatedAt();
 
+        Instant createdAt = null;
+        Instant updatedAt = null;
         UserProfileResponse owner = null;
 
         ProjectResponse projectResponse = new ProjectResponse( id, name, createdAt, updatedAt, owner );
@@ -51,15 +49,14 @@ public class ProjectMapperImpl implements ProjectMapper {
 
         String name = null;
         long id = 0L;
-        Instant createdAt = null;
-        Instant updatedAt = null;
 
         name = project.getName();
         if ( project.getId() != null ) {
             id = project.getId();
         }
-        createdAt = project.getCreatedAt();
-        updatedAt = project.getUpdatedAt();
+
+        Instant createdAt = null;
+        Instant updatedAt = null;
 
         ProjectSummaryResponse projectSummaryResponse = new ProjectSummaryResponse( id, name, createdAt, updatedAt );
 

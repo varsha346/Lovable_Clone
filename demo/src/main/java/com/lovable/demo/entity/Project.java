@@ -21,7 +21,7 @@ import java.time.Instant;
                 @Index(name = "idx_project_deleted_at", columnList = "deleted_at")
         }
 )
-public class Project {
+public class Project extends BaseAuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,12 +31,22 @@ public class Project {
     String name;
 
     Boolean isPublic = false;
+//
+//    @CreationTimestamp
+//    Instant createdAt;
+//
+//    @UpdateTimestamp
+//    Instant updatedAt;
 
-    @CreationTimestamp
-    Instant createdAt;
+    Instant deletedAt;//soft delete
 
-    @UpdateTimestamp
-    Instant updatedAt;
+    @PreUpdate
+    public void beforeUpdate() {
+        System.out.println("Project is about to be updated");
+    }
 
-    Instant deletedAt; //soft delete
+    @PreRemove
+    public void beforeDelete() {
+        System.out.println("Project is about to be deleted");
+    }
 }
