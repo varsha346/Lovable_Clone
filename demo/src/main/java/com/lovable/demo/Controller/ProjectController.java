@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,20 +23,21 @@ private final ProjectService projectService;
 
 @GetMapping
 public ResponseEntity<List<ProjectSummaryResponse>>GetMyProjects(){
-long userId = 1L;
+
 return ResponseEntity.ok(projectService.getUserProjects());
 }
 
 @GetMapping("/{id}")
+@PreAuthorize("@security.canViewProject(#projectId)")
 public ResponseEntity<ProjectResponse>GetProjectsByID(@PathVariable long id){
-    long userId = 1L;
+
         return ResponseEntity.ok(projectService.getUserProjectById(id));
     }
 
 
 @PostMapping
 public ResponseEntity<ProjectResponse>createProject(@RequestBody @Valid ProjectRequest request ){
-    long userId = 1L;
+
     log.info("create order request initiated");
 
     try {
@@ -49,15 +51,17 @@ public ResponseEntity<ProjectResponse>createProject(@RequestBody @Valid ProjectR
 }
 
 @PatchMapping("/{id}")
+@PreAuthorize("@security.canEditProject(#projectId)")
 public ResponseEntity<ProjectResponse> updateProject(@PathVariable long id, @RequestBody @Valid ProjectRequest request) {
-    long userId = 1L;
+
     return ResponseEntity.ok(projectService.updateProject(id,request));
 }
 
 
 @DeleteMapping("/{id}")
+@PreAuthorize("@security.canDeleteProject(#projectId)")
 public ResponseEntity<Void> deleteProject(@PathVariable long id ){
-    long userId = 1L;
+
     projectService.softDelete(id);
     return ResponseEntity.noContent().build();
 }

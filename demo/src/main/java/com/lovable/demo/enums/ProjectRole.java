@@ -19,3 +19,4 @@ public enum ProjectRole {
     private final Set<ProjectPermission>permissions;
 
 }
+

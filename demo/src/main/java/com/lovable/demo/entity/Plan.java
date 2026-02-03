@@ -1,16 +1,18 @@
 package com.lovable.demo.entity;
 import jakarta.persistence.Column;
+import jakarta.persistence.*;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
+
 
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
 public class Plan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
