@@ -36,9 +36,9 @@ spring:
 jwt:
   secret-key: this_is_a_very_long_and_secure_jwt_secret_key_256_bits_minimum
 
-razorpay:
-  razorpay.key_id: ${razor key}
-  razorpay.key_secret: ${razor secret}
+#razorpay:
+#  razorpay.key_id: ${razor key}
+#  razorpay.key_secret: ${razor secret}
 
 
 
