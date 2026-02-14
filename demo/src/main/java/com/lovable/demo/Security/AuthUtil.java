@@ -15,6 +15,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class AuthUtil {
@@ -35,7 +36,15 @@ public class AuthUtil {
                 .signWith(getSecretKey())
                 .compact();
     }
-
+    public String generateRefreshToken(User user){
+        return Jwts.builder()
+                .subject(user.getUsername())
+                .claim("userId", user.getId().toString())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000*60*60*24*7))
+                .signWith(getSecretKey())
+                .compact();
+    }
     public JwtUserPrincipal VerifyAccessToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(getSecretKey())
@@ -48,12 +57,22 @@ public class AuthUtil {
         return new JwtUserPrincipal(userId, username, new ArrayList<>());
     }
 
+
     public Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null || !(authentication.getPrincipal() instanceof JwtUserPrincipal userPrincipal)) {
             throw new AuthenticationCredentialsNotFoundException("No JWT Found");
         }
         return userPrincipal.userId();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return Long.valueOf(claims.getSubject());
     }
 
 }

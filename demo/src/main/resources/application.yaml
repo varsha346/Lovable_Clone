@@ -3,6 +3,16 @@ spring:
     name: lovable-clone
     description: this is a app
 
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 856771506358-eha2vpkhe3jttrnv43mcpu6u5k0ihi0j.apps.googleusercontent.com
+            client-secret: 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
+
+
   datasource:
     url: jdbc:postgresql://localhost:5432/lovable   # usually 5432, see note below
     username: postgres                              # usually 'postgres'
@@ -17,6 +27,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+
+
+    ai:
+      ollama: llama3.1:8b
+      temperature: 0.7
+
 jwt:
   secret-key: this_is_a_very_long_and_secure_jwt_secret_key_256_bits_minimum
 
@@ -33,7 +49,10 @@ logging:
     org.springframework.boot.autoconfigure: WARN
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
+    org.springframework.ai:
+      chat.client: DEBUG
     com.lovable: DEBUG
+
 
   file:
     name: logs/application.log

@@ -5,6 +5,7 @@ import com.lovable.demo.Dto.Auth.LoginRequest;
 import com.lovable.demo.Dto.Auth.SignupRequest;
 import com.lovable.demo.Security.AuthUtil;
 import com.lovable.demo.Service.AuthService;
+import com.lovable.demo.Service.UserService;
 import com.lovable.demo.entity.User;
 import com.lovable.demo.error.BadRequestException;
 import com.lovable.demo.mapper.UserMapper;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -27,6 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class AuthServiceImpl implements AuthService {
     UserRepository userRepository;
     UserMapper userMapper;
+    UserService userService;
     PasswordEncoder passwordEncoder;
     AuthUtil authUtil;
     AuthenticationManager authenticationManager;
@@ -41,7 +45,8 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user = userRepository.save(user);
         String token = authUtil.generateAccessToken(user);
-        return new AuthResponse(token,userMapper.toUserProfileResponse(user));
+        String refreshToken = authUtil.generateRefreshToken(user);
+        return new AuthResponse(token,refreshToken,userMapper.toUserProfileResponse(user));
 
     }
 
@@ -59,7 +64,20 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow();
 
         String token = authUtil.generateAccessToken(user);
-        return new AuthResponse(token, userMapper.toUserProfileResponse(user));
+        String refreshToken = authUtil.generateRefreshToken(user);
+        return new AuthResponse(token,refreshToken, userMapper.toUserProfileResponse(user));
+    }
+
+    @Override
+   public AuthResponse refreshToken(String refreshToken){
+         Long userId = authUtil.getUserIdFromToken(refreshToken);
+         User user = userService.getUserById(userId);
+
+         String accessToken = authUtil.generateAccessToken(user);
+         return new AuthResponse(accessToken,refreshToken,userMapper.toUserProfileResponse(user));
+
+
     }
 
 }
+
